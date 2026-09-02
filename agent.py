@@ -29,16 +29,20 @@ def chat(messages, system=None, temperature=1.0, tools=None):
     message = client.messages.create(**params)
     return message
 
-def run_agent(user_input):
+def run_agent(user_id, user_input):
+    system = f"You are a helpful skincare assistant. The current user's ID is '{user_id}'. Use this ID when calling tools that require a user_id."
+
     messages = []
     add_user_message(messages, user_input)
     
     while True:
-        message = chat(messages, tools=TOOLS)
+        message = chat(messages, tools=TOOLS, system=system)
         add_assistant_message(messages, message.content)
         
         if message.stop_reason != "tool_use":
-            return message.content[0].text
+            return {
+                "answer": message.content[0].text, 
+                "messages": messages}
         
         tool_use_blocks = [block for block in message.content if block.type == "tool_use"]
         
@@ -56,4 +60,4 @@ def run_agent(user_input):
             
         add_user_message(messages, tool_results)
 
-print(run_agent("what's in user_1's skin history?"))
+print(run_agent("user_1", "what is my skin history?"))
