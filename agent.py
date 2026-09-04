@@ -15,12 +15,11 @@ def add_assistant_message(messages, output):
     assistant_message = {"role": "assistant", "content": output}
     messages.append(assistant_message)
 
-def chat(messages, system=None, temperature=1.0, tools=None):
+def chat(messages, system=None, tools=None):
     params = {
         "model": model,
         "max_tokens": 1000,
         "messages": messages,
-        "temperature": temperature
     }
     if system:
         params["system"] = system
@@ -60,4 +59,4 @@ def run_agent(user_id, user_input):
             
         add_user_message(messages, tool_results)
 
-print(run_agent("user_1", "what is my skin history?"))
+print(run_agent("user_1", "what helps with dryness?"))
