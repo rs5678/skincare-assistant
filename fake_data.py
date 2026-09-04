@@ -117,6 +117,9 @@ class FakeIngredientKnowledgeBase:
             if query.lower() in fact.ingredient_name.lower():
                 matches.append(fact)
         return matches
+    
+    def get_all_facts(self) -> List[IngredientFact]:
+        return self._facts
 
 if __name__ == "__main__":
     kb = FakeIngredientKnowledgeBase()

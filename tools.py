@@ -1,4 +1,5 @@
 import json
+from rag import search_ingredient_semantics
 from fake_data import FakeUserHistoryStore, FakeIngredientKnowledgeBase
 
 store = FakeUserHistoryStore()
@@ -28,9 +29,16 @@ get_user_history_schema = {
 # --- search_ingredients ---
 
 def search_ingredients(query: str) -> str:
-    ingredients = kb.search(query)
-    ingredients_as_dict = [ingredient.model_dump() for ingredient in ingredients]
-    return json.dumps(ingredients_as_dict, default=str)
+    ingredients = search_ingredient_semantics(query)
+    ingreidents_as_dict = []
+    for ingredient_name, category, effects, warnings in ingredients:
+        ingreidents_as_dict.append({
+            "ingredient_name": ingredient_name,
+            "category": category,
+            "effects": effects,
+            "warnings": warnings
+        })
+    return json.dumps(ingreidents_as_dict, default=str)
 
 search_ingredients_schema = {
     "name": "search_ingredients",
